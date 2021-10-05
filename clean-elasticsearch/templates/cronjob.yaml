@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "clean-elasticsearch.fullname" . }}
+  labels:
+    {{- include "clean-elasticsearch.labels" . | nindent 4 }}
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: {{ include "clean-elasticsearch.serviceAccountName" . }}
+          containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            envFrom:
+            - configMapRef:
+                name: {{ include "clean-elasticsearch.fullname" . }}-config
+            command:
+            - /bin/sh
+            - -c
+            - echo "Expected to delete index: logstash-$(date -d "$DATELIMIT days ago" +%Y.%m.%d)";curl -XDELETE $ES_IP:ES_PORT/logstash-$(date -d "$DATELIMIT days ago" +%Y.%m.%d)"
+          restartPolicy: OnFailure
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
