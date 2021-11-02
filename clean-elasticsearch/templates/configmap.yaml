@@ -5,6 +5,6 @@ metadata:
   labels:
     {{- include "clean-elasticsearch.labels" . | nindent 4 }}
 data:
-  ES_IP: {{ .Values.elasticsearch.ip }}
-  ES_PORT: {{ .Values.elasticsearch.port }}
-  DATELIMIT: {{ .Values.datelimit }}
+  ES_IP: "{{ .Values.elasticsearch.ip }}"
+  ES_PORT: "{{ .Values.elasticsearch.port }}"
+  DATELIMIT: "{{ .Values.datelimit }}"

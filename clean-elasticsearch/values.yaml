@@ -3,10 +3,10 @@
 # Declare variables to be passed into your templates.
 
 elasticsearch:
-  ip: 127.0.0.1
-  port: 9200
+  ip: "127.0.0.1"
+  port: "9200"
 
-datelimit: 7
+datelimit: "7"
 
 image:
   repository: centos

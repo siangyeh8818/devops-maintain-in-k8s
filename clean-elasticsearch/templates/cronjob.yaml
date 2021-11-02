@@ -21,7 +21,7 @@ spec:
             command:
             - /bin/sh
             - -c
-            - echo "Expected to delete index: logstash-$(date -d "$DATELIMIT days ago" +%Y.%m.%d)";curl -XDELETE $ES_IP:ES_PORT/logstash-$(date -d "$DATELIMIT days ago" +%Y.%m.%d)"
+            - echo "Expected to delete index logstash-$(date -d "$DATELIMIT days ago" +%Y.%m.%d)" && curl -XDELETE $ES_IP:ES_PORT/logstash-$(date -d "$DATELIMIT days ago" +%Y.%m.%d)
           restartPolicy: OnFailure
           {{- with .Values.nodeSelector }}
           nodeSelector:
