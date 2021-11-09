@@ -11,13 +11,14 @@ spec:
       template:
         spec:
           serviceAccountName: {{ include "clean-elasticsearch.serviceAccountName" . }}
+          volumes:
+            - name: config
+              configMap:
+                name: {{ include "clean-elasticsearch.fullname" . }}-config
           containers:
           - name: {{ .Chart.Name }}
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             imagePullPolicy: {{ .Values.image.pullPolicy }}
-            envFrom:
-            - configMapRef:
-                name: {{ include "clean-elasticsearch.fullname" . }}-config
             command:
             - /bin/sh
             - -c
